@@ -1,3 +1,5 @@
+from enum import unique
+
 import pandas as pd
 import streamlit as st
 import plotly.express as px
@@ -22,6 +24,27 @@ books_df = pd.read_csv('bestsellers_with_categories_2022_03_27.csv')
 st.title("Bestselling Books Analysis")
 st.write("This app analyzes the Amazon Top Selling books from 2009 to 2022.")
 
+st.sidebar.header("Add New Book Data")
+with st.sidebar.form("book_form"):
+    new_name = st.text_input("Book Name")
+    new_author = st.text_input("Author Name")
+    new_user_rating = st.slider("User Rating", 0.5,5.0, 0.0, 0.1)
+    new_review = st.number_input('Review', min_value=0, step=1)
+    new_price = st.number_input('Price', min_value=0, step=1)
+    new_year = st.number_input('Year', min_value=2009, max_value=2022, step=1)
+    new_Genre = st.selectbox("Genre", books_df['Genre'].unique())
+    submit_button = st.form_submit_button(label="Add Book")
+
+if  submit_button:
+    new_data = {
+        'Name': new_name,
+        'Author': new_author,
+        'User Rating':  new_user_rating,
+        'Reviews': new_review,
+        'Price': new_price,
+        'Year': new_year,
+        'Genre':  new_Genre
+    }
 # Summary Statistics
 st.subheader("Summary Statistics")
 total_books = books_df.shape[0]
@@ -63,15 +86,20 @@ st.plotly_chart(fig)
 
 st.subheader("Number of Fiction vs Non-Fiction Books Over the Years")
 size = books_df.groupby(['Year', 'Genre']).size().reset_index(name='Count')
-fig = px.bar(size, x='Year', y='Count',color='Genre', title='Number of Fiction vs Non-Fiction Books from 2009 - 2022',
+fig = px.bar(size, x='Year', y='Count',color='Genre', title='Number of Fiction vs Non-Fiction Books from 2009-2022',
              color_discrete_sequence=px.colors.sequential.Plasma, barmode='group')
 st.plotly_chart(fig)
 
-st.subheader("Top 15 Authors by Counts of Books Published (2009-2022)")
+st.header('Top 15 Authors by Counts of Books Over the Years')
 top_authors = books_df['Author'].value_counts().head(15).reset_index()
 top_authors.columns = ['Author', 'Count']
 fig = px.bar(top_authors, x='Count', y='Author', orientation='h',
              title='Top 15 Authors by Counts of Books Published',
-             labels={'Count': 'Counts of Books Published', 'Author': 'Author'},
+             labels={'Count': 'Counts of Books Published', 'Author':'Author'},
              color='Count', color_continuous_scale=px.colors.sequential.Plasma)
 st.plotly_chart(fig)
+
+st.subheader("Filter Data by Genre")
+genre_filter = st.selectbox('Select Genre', books_df['Genre'].unique())
+filter_df = books_df[books_df['Genre'] == genre_filter]
+st.write(filter_df)
