@@ -115,6 +115,7 @@ fig = px.bar(top_authors, x='Count', y='Author', orientation='h',
              color='Count', color_continuous_scale=px.colors.sequential.Plasma)
 st.plotly_chart(fig)
 
+
 # Interactivity: Filter Data by Genre
 st.subheader("Filter Data by Genre")
 genre_filter = st.selectbox("Select Genre", filtered_books_df['Genre'].unique())
