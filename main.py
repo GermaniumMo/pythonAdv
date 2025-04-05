@@ -5,6 +5,7 @@ import plotly.express as px
 # Load the dataset
 books_df = pd.read_csv('bestsellers_with_categories_2022_03_27.csv')
 
+
 # Streamlit app title and description
 st.title("Bestselling Books Analysis")
 st.write("This app analyzes the Amazon Top Selling books from 2009 to 2022.")
