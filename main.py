@@ -68,6 +68,7 @@ col1, col2, col3, col4 = st.columns(4)
 col1.metric("Total Books", total_books)
 col2.metric("Unique Titles", unique_titles)
 col3.metric("Average Rating", f"{average_rating:.2f}")
+
 col4.metric("Average Price", f"${average_price:.2f}")
 
 # Dataset Preview
